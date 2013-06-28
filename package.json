@@ -1,0 +1,21 @@
+{
+  "name": "pool-shard",
+  "description": "Pools of sharded PostgreSQL database connections.",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "coffee-script": "*",
+    "pg": "git://github.com/promptworks/node-postgres.git#master",
+    "generic-pool": "*",
+    "async": "*"
+  },
+  "devDependencies": {
+    "debug": "*",
+    "mocha": "*",
+    "replay": "*",
+    "request": "*",
+    "should": "*",
+    "supervisor": "*",
+    "moment": "*"
+  }
+}
