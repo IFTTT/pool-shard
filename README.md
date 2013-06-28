@@ -9,7 +9,7 @@ Pools of sharded PostgreSQL database connections.
 ## Examples
 
 ```javascript
-var ConnectionCollection = require('pool-shard/connection_collection')
+var ConnectionCollection = require('pool-shard/connection_collection');
 var collection = new ConnectionCollection({});
 var connection = collection.connectionFor(123456);
 connection.connect(function(err) {
