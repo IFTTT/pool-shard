@@ -1,11 +1,8 @@
 {puts,inspect}  = require("util")
-util            = require("../util")
-logger          = util.logger
 path            = require('path')
 pg              = require('pg').native
-Pool            = require('generic-pool').Pool
-_               = require("underscore")
 async           = require('async')
+Pool            = require('generic-pool').Pool
 Connection      = require('./connection')
 MultiConnection = require('./multi_connection')
 

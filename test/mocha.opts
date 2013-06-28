@@ -1,0 +1,7 @@
+--require should
+--reporter spec
+--ui bdd
+--colors
+--growl
+--compilers coffee:coffee-script
+--slow 300 
