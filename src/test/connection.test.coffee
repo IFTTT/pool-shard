@@ -1,34 +1,13 @@
 {puts, inspect} = require('util')
 ps              = require('../lib')
 test_helper     = require('./test_helper')
-config          = test_helper.config
-
-class ClientStub
-  constructor: () ->
-    @queries = []
-
-  query: (sql..., cb) ->
-    @queries = @queries.concat(sql)
-    cb(null, {})
-
-class PoolStub
-  constructor: (@client) ->
-    @acquireCount = 0
-    @releaseCount = 0
-
-  acquire: (cb) ->
-    @acquireCount++
-    cb null, @client
-
-  release: (_client) ->
-    @releaseCount++
 
 describe 'Connection', ->
 
   beforeEach (done) ->
     @schema     = 'shard_1234'
-    @client     = new ClientStub
-    @pool       = new PoolStub(@client)
+    @client     = new test_helper.ClientStub
+    @pool       = new test_helper.PoolStub(@client)
     @connection = new ps.Connection(@pool, @schema)
     done()
 

@@ -6,7 +6,24 @@ config          = test_helper.config
 describe 'ConnectionCollection', ->
 
   beforeEach (done) ->
-    @collection = new ps.ConnectionCollection(config)
+    @config = 
+      shards: 4
+      nodes: [{
+        url: 'tcp://postgres:@localhost/pool_shard_test1'
+        shard:
+          min: 1
+          max: 2
+        pool_size: 8
+        idle_timeout_millis: 30000
+      },{
+        url: 'tcp://postgres:@localhost/pool_shard_test2'
+        shard:
+          min: 3
+          max: 4
+        pool_size: 8
+        idle_timeout_millis: 30000
+      }]
+    @collection = new ps.ConnectionCollection(@config)
     done()
 
   it 'should be a ConnectionCollection', (done) ->
@@ -30,7 +47,7 @@ describe 'ConnectionCollection', ->
     schemaDelta     = connectionDelta.schema
     poolDelta       = connectionDelta.pool
     schemaDelta.should.equal('shard_0003')
-    poolDelta.should.equal(@collection.pools[config.nodes[1].url])
+    poolDelta.should.equal(@collection.pools[@config.nodes[1].url])
     done()
 
   it 'should return Connection for specified database & schema', (done) ->
@@ -42,5 +59,5 @@ describe 'ConnectionCollection', ->
 
   it 'should return MultiConnection for specified all databases & schemas', (done) ->
     multiConnection = @collection.connectionForAll()
-    multiConnection.poolsAndShards.length.should.equal(config.nodes.length)
+    multiConnection.poolsAndShards.length.should.equal(@config.nodes.length)
     done()
