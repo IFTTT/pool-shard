@@ -4,12 +4,12 @@ Pools of sharded PostgreSQL database connections.
 
 ## Installation
 
-    $ npm install pool-shard
+    $ npm install git://github.com/promptworks/pool-shard.git#master
 
 ## Examples
 
 ```javascript
-var ConnectionCollection = require('pool-shard/connection_collection');
+var ConnectionCollection = require('pool-shard').ConnectionCollection;
 var collection = new ConnectionCollection({});
 var connection = collection.connectionFor(123456);
 connection.connect(function(err) {
@@ -50,6 +50,15 @@ Install node module dependencies, create databases & shards, and run migrations 
 Run the tests to ensure everything works
 
     $ make test
+
+### TODO
+
+1. Inject logger
+2. Inject pg binding preference (native or JS-only)
+3. Refactor ConnectionCollection to be more testable
+    1. Inject Pool?
+    2. Inject Client?
+4. Integration test that hits dbs
 
 ## License
 
