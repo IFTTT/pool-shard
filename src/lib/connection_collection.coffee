@@ -52,7 +52,7 @@ class ConnectionCollection
 
   _calculateShard: (shardKey) ->
     shardNumber = ((shardKey - 1) % @config.shards) + 1
-    throw "No shard key provided! User id missing???" if isNaN(shardNumber)
+    throw "No shard key provided!" if isNaN(shardNumber)
     shardNumber
 
   _schemaOfShard: (shardNumber) ->
