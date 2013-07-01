@@ -1,5 +1,4 @@
 {puts,inspect}  = require("util")
-path            = require('path')
 pg              = require('pg').native
 async           = require('async')
 Pool            = require('generic-pool').Pool
@@ -13,15 +12,16 @@ class ConnectionCollection
 
   constructor: (@config)->
     @pools = {}
+    @config.nodes ||= []
     for node in @config.nodes
       @pools[node.url] = do (node) =>
         pool = new Pool
           name:   'pg'
           create: (callback) =>
             client = new pg.Client(node.url, ssl: node.ssl)
-            logger.info "psql connecting to #{node.url}"
+            # logger.info "psql connecting to #{node.url}"
             client.connect (err) ->
-              logger.error inspect err if err
+              # logger.error inspect err if err
               callback(err, client)
           destroy: (client) -> client.end()
           max: node.pool_size || defaults.pool_size
@@ -29,22 +29,6 @@ class ConnectionCollection
           log: false # can also be a function
         pool.url = node.url
         pool
-
-  _poolFor: (databaseName) ->
-    @pools[databaseName]
-
-  _calculateShard: (shardKey) ->
-    shardNumber = ((shardKey - 1) % @config.shards) + 1
-    throw "No shard key provided! User id missing???" if isNaN(shardNumber)
-    shardNumber
-
-  _schemaOfShard: (shardNumber) ->
-    zeroPaddedShardNumber = ("0000" + shardNumber).slice(-4)
-    "shard_#{zeroPaddedShardNumber}"
-
-  _databaseOfShard: (shardNumber) ->
-    for _, node of @config.nodes when node.shard.min <= shardNumber <= node.shard.max
-      return node.url
 
   connectionFor: (shardKey) ->
     shardNumber  = @_calculateShard(shardKey)
@@ -61,7 +45,22 @@ class ConnectionCollection
       pool    = @_poolFor(url)
       schemas = (@_schemaOfShard(i) for i in [min..max])
       [pool, schemas]
-
     new MultiConnection(poolsAndShards)
+
+  _poolFor: (databaseName) ->
+    @pools[databaseName]
+
+  _calculateShard: (shardKey) ->
+    shardNumber = ((shardKey - 1) % @config.shards) + 1
+    throw "No shard key provided! User id missing???" if isNaN(shardNumber)
+    shardNumber
+
+  _schemaOfShard: (shardNumber) ->
+    zeroPaddedShardNumber = ("0000" + shardNumber).slice(-4)
+    "shard_#{zeroPaddedShardNumber}"
+
+  _databaseOfShard: (shardNumber) ->
+    for _, node of @config.nodes when node.shard.min <= shardNumber <= node.shard.max
+      return node.url
 
 module.exports = ConnectionCollection

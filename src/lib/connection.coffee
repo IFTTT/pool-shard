@@ -1,6 +1,4 @@
-util                  = require("../util")
 {puts,print,inspect}  = require("util")
-logger                = util.logger
 async                 = require('async')
 
 class Connection
@@ -8,7 +6,7 @@ class Connection
   constructor: (@pool, @schema) ->
 
   query: (sql..., queryDone) ->
-    logger.info sql
+    # logger.info sql
 
     client = null
     result = null
@@ -22,7 +20,7 @@ class Connection
         (done) => client.query "SET search_path TO '#{@schema}'", done
         (done) =>
           client.query sql..., (_sqlErr, _result) ->
-            logger.error inspect _sqlErr if _sqlErr
+            # logger.error inspect _sqlErr if _sqlErr
             result = _result
             sqlErr = _sqlErr
             done()
