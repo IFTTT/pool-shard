@@ -10,6 +10,11 @@ all:
 	npm install
 	npm link
 
+help:
+	@echo "make all"
+	@echo "make test"
+	@echo "make build"
+
 test:
 	$(NPM_EXECUTABLE_HOME)/mocha $(TEST_FILES)
 
