@@ -2,6 +2,7 @@
   "name": "pool-shard",
   "description": "Pools of sharded PostgreSQL database connections.",
   "version": "0.0.1",
+  "main": "./lib",
   "private": true,
   "dependencies": {
     "coffee-script": "*",
