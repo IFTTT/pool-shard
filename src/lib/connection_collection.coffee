@@ -17,12 +17,12 @@ class ConnectionCollection
       @pools[node.url] = do (node) =>
         pool = new Pool
           name:   'pg'
-          create: (callback) =>
+          create: (connected) =>
             client = new pg.Client(node.url, ssl: node.ssl)
             # logger.info "psql connecting to #{node.url}"
             client.connect (err) ->
               # logger.error inspect err if err
-              callback(err, client)
+              connected(err, client)
           destroy: (client) -> client.end()
           max: node.pool_size || defaults.pool_size
           idleTimeoutMillis: node.idle_timeout_millis || defaults.idle_timeout_millis

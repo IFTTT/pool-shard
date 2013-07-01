@@ -7,7 +7,6 @@ class Connection
 
   query: (sql..., queryDone) ->
     # logger.info sql
-
     client = null
     result = null
     sqlErr = null
