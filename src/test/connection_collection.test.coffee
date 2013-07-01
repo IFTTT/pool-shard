@@ -54,3 +54,17 @@ describe 'ConnectionCollection', ->
     schemaDelta.should.equal('shard_0003')
     poolDelta.should.equal(@collection.pools[@config.nodes[1].url])
     done()
+
+  it 'should return Connection for specified database & schema', (done) ->
+    databaseName  = 'pool_shard_test2'
+    schemaName    = 'shard_0003'
+    connection    = @collection.connectionForSchema(databaseName, schemaName)
+    connection.schema.should.equal(schemaName)
+    done()
+
+  it 'should return MultiConnection for specified all databases & schemas', (done) ->
+    multiConnection = @collection.connectionForAll()
+    multiConnection.poolsAndShards.length.should.equal(@config.nodes.length)
+    done()
+
+
