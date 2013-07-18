@@ -4,7 +4,7 @@ Pools of sharded PostgreSQL database connections.
 
 ## Installation
 
-    $ npm install git://github.com/promptworks/pool-shard.git#master
+    $ npm install git://github.com/IFTTT/pool-shard.git#master
 
 ## Examples
 
