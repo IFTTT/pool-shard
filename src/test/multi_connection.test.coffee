@@ -27,12 +27,12 @@ describe 'MultiConnection', ->
   it 'should send sql query to all pools and shards', (done) ->
     sql = "SELECT * FROM stuffs;"
     @multiConnection.query sql, (err, result) =>
-      @clientAlpha.queries[0].should.include(@schemaAlpha1)
+      @clientAlpha.queries[0].should.containEql(@schemaAlpha1)
       @clientAlpha.queries[1].should.equal(sql)
-      @clientAlpha.queries[2].should.include(@schemaAlpha2)
+      @clientAlpha.queries[2].should.containEql(@schemaAlpha2)
       @clientAlpha.queries[3].should.equal(sql)
-      @clientBeta.queries[0].should.include(@schemaBeta3)
+      @clientBeta.queries[0].should.containEql(@schemaBeta3)
       @clientBeta.queries[1].should.equal(sql)
-      @clientBeta.queries[2].should.include(@schemaBeta4)
+      @clientBeta.queries[2].should.containEql(@schemaBeta4)
       @clientBeta.queries[3].should.equal(sql)
       done()

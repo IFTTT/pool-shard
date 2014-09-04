@@ -16,9 +16,14 @@ class ClientStub
   constructor: () ->
     @queries = []
 
+  connect: (cb) ->
+    cb()
+
+  end: ->
+
   query: (sql..., cb) ->
     @queries = @queries.concat(sql)
-    cb(null, {})
+    cb null, {}
 
 exports.PoolStub    = PoolStub
 exports.ClientStub  = ClientStub

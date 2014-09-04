@@ -47,6 +47,49 @@ class ConnectionCollection
       [pool, schemas]
     new MultiConnection(poolsAndShards)
 
+  @adminClient: (opts) ->
+    new pg.Client(opts.url, ssl: opts.ssl, database: 'postgres')
+
+  createDatabases: (done) ->
+    async.eachSeries @config.nodes, (node, nodeDone) =>
+      client = new @constructor.adminClient(node)
+      urlTokens = node.url.split('/')
+      databaseName = urlTokens[urlTokens.length - 1]
+      async.series [
+        (stepDone) =>
+          client.connect stepDone
+        (stepDone) =>
+          client.query "CREATE DATABASE #{databaseName}", stepDone
+        (stepDone) =>
+          client.end()
+          stepDone()
+      ], nodeDone
+    , done
+
+  createSchemas: (done) ->
+    async.eachSeries @config.nodes, (node, nodeDone) =>
+      pool = @_poolFor(node.url)
+      async.eachSeries [node.shard.min..node.shard.max], (i, schemaDone) =>
+        schema = @_schemaOfShard(i)
+        client = result = sqlErr = null
+        async.series [
+          (done) =>
+            pool.acquire (err, _client) =>
+              client = _client
+              done err
+          (done) =>
+            client.query "CREATE SCHEMA #{schema}", (_sqlErr, _result) =>
+              # logger.error inspect _sqlErr if _sqlErr
+              result = _result
+              sqlErr = _sqlErr
+              done()
+          (done) =>
+            pool.release client
+            done()
+        ], (err) -> schemaDone(err || sqlErr, result)
+      , nodeDone
+    , done
+
   _poolFor: (databaseName) ->
     @pools[databaseName]
 
