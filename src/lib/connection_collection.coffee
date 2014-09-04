@@ -55,7 +55,9 @@ class ConnectionCollection
     throw "No shard key provided!" if isNaN(shardNumber)
     shardNumber
 
-  _schemaOfShard: (shardNumber) ->
+  _schemaOfShard: (shardNumber) -> @constructor.defaultSchemaForShard(shardNumber)
+
+  @defaultSchemaForShard: (shardNumber) ->
     zeroPaddedShardNumber = ("0000" + shardNumber).slice(-4)
     "shard_#{zeroPaddedShardNumber}"
 

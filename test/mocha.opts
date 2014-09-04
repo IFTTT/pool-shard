@@ -3,5 +3,5 @@
 --ui bdd
 --colors
 --growl
---compilers coffee:coffee-script
+--compilers coffee:coffee-script/register
 --slow 300 
