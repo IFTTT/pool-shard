@@ -19,7 +19,7 @@ describe 'Connection', ->
     sql = "SELECT * FROM stuffs;"
     @connection.query sql, (err, result) =>
       @client.queries[0].should.match(/search_path/)
-      @client.queries[0].should.include(@schema)
+      @client.queries[0].should.containEql(@schema)
       @client.queries[1].should.equal(sql)
       done()
 
