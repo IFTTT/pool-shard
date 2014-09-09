@@ -30,6 +30,30 @@ class ConnectionCollection
         pool.url = node.url
         pool
 
+  # We allow for an arbitrary timeout here, because the native PG client
+  # requires a bit of time before the connection is truly closed, and there is
+  # no callback to verify. This is a kind of race condition, but we need to
+  # be able to hack around it, otherwise connections may emit uncaught error
+  # events even after destroyAllConnections() has been called.
+  destroyAllConnections: (args...) ->
+    switch args.length
+      when 1
+        opts = {}
+        done = args[0]
+      when 2
+        opts = args[0]
+        done = args[1]
+      else
+        throw new Error("Invalid arguments!")
+
+    async.each Object.keys(@pools), (poolKey, stepDone) =>
+      pool = @pools[poolKey]
+      pool.destroyAllNow stepDone
+    , (err) ->
+      setTimeout ->
+        done err
+      , opts.timeout || 250
+
   connectionFor: (shardKey) ->
     shardNumber  = @_calculateShard(shardKey)
     schemaName   = @_schemaOfShard(shardNumber)
