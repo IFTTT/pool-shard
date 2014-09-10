@@ -52,7 +52,7 @@ class ConnectionCollection
     , (err) ->
       setTimeout ->
         done err
-      , opts.timeout || 500
+      , opts.timeout || 100
 
   connectionFor: (shardKey) ->
     shardNumber  = @_calculateShard(shardKey)
