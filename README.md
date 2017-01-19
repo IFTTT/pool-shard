@@ -1,3 +1,6 @@
+## Deprecated
+This project is not being developed. Feel free to fork!
+
 # pool-shard
 
 Pools of sharded PostgreSQL database connections.
